@@ -279,7 +279,6 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
           </div>
         </div>
       </div>
-      {/* Mobile/Tablet view: Simple grid layout */}
       <div className="md:hidden bg-gray-950/50 py-16 px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Nos Piliers d'Expertise</h2>
