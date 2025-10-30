@@ -3,7 +3,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as yup from 'yup';
 import { CursorHover } from './Cursor';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// En prod sur Vercel: utiliser URL relative. En dev: localhost
+const API_URL =
+  import.meta.env.VITE_API_URL !== undefined && import.meta.env.VITE_API_URL !== ''
+    ? import.meta.env.VITE_API_URL
+    : import.meta.env.MODE === 'production'
+    ? ''
+    : 'http://localhost:3001';
 
 interface Message {
   id: string;

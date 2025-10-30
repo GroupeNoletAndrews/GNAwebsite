@@ -7,9 +7,13 @@ interface ContactFormProps {
   idPrefix: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL =
+  import.meta.env.VITE_API_URL !== undefined && import.meta.env.VITE_API_URL !== ''
+    ? import.meta.env.VITE_API_URL
+    : import.meta.env.MODE === 'production'
+    ? ''
+    : 'http://localhost:3001';
 
-// Schéma de validation
 const validationSchema = yup.object().shape({
   firstName: yup
     .string()
