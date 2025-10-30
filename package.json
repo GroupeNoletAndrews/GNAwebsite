@@ -4,22 +4,40 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "dev:prod": "vite --mode production",
+    "dev:server": "cross-env NODE_ENV=development tsx watch server/index.ts",
+    "dev:server:prod": "cross-env NODE_ENV=production tsx watch server/index.ts",
+    "dev:all:local": "concurrently \"yarn run dev\" \"yarn run dev:server\" --names \"vite,api\" --prefix-colors \"cyan,green\"",
+    "dev:all": "concurrently \"yarn run dev:prod\" \"yarn run dev:server:prod\" --names \"vite,api\" --prefix-colors \"cyan,green\"",
+    "build": "vite build --mode production",
+    "build:server": "tsc server/index.ts --outDir dist-server",
+    "preview": "vite preview",
+    "start:server": "cross-env NODE_ENV=production node dist-server/server/index.js"
   },
   "dependencies": {
     "clsx": "2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "framer-motion": "11.2.12",
     "lenis": "^1.3.11",
     "ogl": "0.0.101",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "tailwind-merge": "2.3.0"
+    "resend": "^6.2.2",
+    "tailwind-merge": "2.3.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "chokidar": "^4.0.3",
+    "concurrently": "^9.1.2",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.19.2",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

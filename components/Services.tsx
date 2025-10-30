@@ -236,7 +236,7 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
   return (
     <section id="services" className="w-full">
       <div ref={sectionRef} className="relative max-w-[1800px] mx-auto">
-        <div className="sticky top-0 h-screen w-full grid grid-cols-1 md:grid-cols-5 overflow-hidden px-8 gap-x-8">
+        <div className="hidden md:grid sticky top-0 h-screen w-full md:grid-cols-5 overflow-hidden px-8 gap-x-8">
           <AnimatedTitle
             lenis={lenis}
             isActive={isActive}
@@ -279,7 +279,6 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
           </div>
         </div>
       </div>
-      {/* Mobile/Tablet view: Simple grid layout */}
       <div className="md:hidden bg-gray-950/50 py-16 px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Nos Piliers d'Expertise</h2>
