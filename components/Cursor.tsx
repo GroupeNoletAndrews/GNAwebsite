@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 // --- Context ---
 interface CursorContextProps {
@@ -22,28 +22,30 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
-    // Disable on touch devices
-    if (typeof window !== 'undefined' && 'ontouchstart' in window) {
-      setIsTouchDevice(true);
+    // Disable on touch devices or mobile screens
+    if (typeof window !== 'undefined') {
+      const isMobile =
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(pointer: coarse)').matches ||
+        window.innerWidth < 1024;
+      setIsTouchDevice(isMobile);
     }
   }, []);
-  
+
   const onMouseMove = useCallback((e: MouseEvent) => {
     const { clientX, clientY } = e;
     // We update the React state here to have the highlighter follow smoothly
     // when not attached to a hovered element.
     setMousePosition({ x: clientX, y: clientY });
 
-    // For the main follower dot, we use rAF and direct DOM manipulation.
-    // This is the key to bypassing React's render cycle for position updates,
-    // ensuring zero input lag.
     if (animationFrameId.current) {
       cancelAnimationFrame(animationFrameId.current);
     }
-    
+
     animationFrameId.current = requestAnimationFrame(() => {
       if (cursorFollowerRef.current) {
-         cursorFollowerRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+        cursorFollowerRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
       }
     });
   }, []);
@@ -64,15 +66,15 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
 
   const elementRect = hoveredElement?.getBoundingClientRect();
 
-  const contextValue = { 
+  const contextValue = {
     setHoveredElement: (el: HTMLElement | null) => {
       setHoveredElement(el);
       // If setting a hover element, ensure the variant is default (not text).
       if (el) setCursorVariant('default');
     },
-    setCursorVariant
+    setCursorVariant,
   };
-  
+
   if (isTouchDevice) {
     return <>{children}</>;
   }
@@ -85,13 +87,13 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   return (
     <CursorContext.Provider value={contextValue}>
       {/* 1. The ultra-responsive follower, positioned directly for performance. */}
-      <div 
+      <div
         ref={cursorFollowerRef}
         className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200"
         style={{ opacity: isFollowerVisible ? 1 : 0 }}
       >
         {/* The default dot */}
-        <div 
+        <div
           className="bg-white rounded-full mix-blend-difference transition-transform duration-200"
           style={{
             width: 16,
@@ -126,21 +128,25 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   );
 };
 
-
 // --- Hover Component Wrapper ---
 interface CursorHoverProps extends Omit<React.AllHTMLAttributes<HTMLElement>, 'as'> {
   children: React.ReactNode;
   cursorStyle?: 'block' | 'text';
   as?: React.ElementType;
 }
-export const CursorHover: React.FC<CursorHoverProps> = ({ children, cursorStyle = 'block', as: Tag = 'div', ...props }) => {
+export const CursorHover: React.FC<CursorHoverProps> = ({
+  children,
+  cursorStyle = 'block',
+  as: Tag = 'div',
+  ...props
+}) => {
   const context = useContext(CursorContext);
   const ref = useRef<HTMLElement>(null);
 
   if (!context) {
     return <Tag {...props}>{children}</Tag>;
   }
-  
+
   const { setHoveredElement, setCursorVariant } = context;
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
@@ -157,7 +163,7 @@ export const CursorHover: React.FC<CursorHoverProps> = ({ children, cursorStyle 
     setCursorVariant('default');
     if (props.onMouseLeave) props.onMouseLeave(e);
   };
-  
+
   return (
     <Tag ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} {...props}>
       {children}

@@ -53,22 +53,22 @@ const PourquoiNousChoisir: React.FC<PourquoiNousChoisirProps> = ({ isActive, len
 
   const mobileLayout = (
     <AnimatedContainer
-      className="w-full flex flex-col items-center justify-center text-center py-24 px-4"
+      className="w-full flex flex-col items-center justify-center text-center py-20 px-4"
       stagger={0.1}
     >
-      <motion.h2 variants={itemVariants} className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-        Pourquoi nous choisir ?
-      </motion.h2>
-      <motion.p variants={itemVariants} className="mt-4 max-w-3xl mx-auto text-xl text-gray-400">
-        Et si vos opérations étaient aussi agiles que votre vision d’affaires ?
-      </motion.p>
-      <div className="mt-16 w-full max-w-2xl space-y-8">
+      <motion.div variants={itemVariants} className="mb-12">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">Pourquoi nous choisir ?</h2>
+        <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+          Et si vos opérations étaient aussi agiles que votre vision d'affaires ?
+        </p>
+      </motion.div>
+      <div className="w-full max-w-2xl space-y-6">
         {reasons.map(reason => (
           <motion.div key={reason.title} variants={itemVariants}>
             <WobbleCard containerClassName="bg-gray-900/70 border border-gray-800">
-              <div className="p-8 text-left">
-                <h3 className="text-2xl font-bold text-white mb-4">{reason.title}</h3>
-                <p className="text-lg text-gray-400">{reason.description}</p>
+              <div className="p-6 text-left">
+                <h3 className="text-xl font-bold text-white mb-2">{reason.title}</h3>
+                <p className="text-base text-gray-400">{reason.description}</p>
               </div>
             </WobbleCard>
           </motion.div>

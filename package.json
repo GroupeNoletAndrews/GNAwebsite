@@ -4,13 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:server": "tsx watch server/index.ts",
-    "dev:all": "concurrently \"yarn run dev\" \"yarn run dev:server\" --names \"vite,api\" --prefix-colors \"cyan,green\"",
-    "build": "vite build",
+    "dev": "vite --mode development",
+    "dev:prod": "vite --mode production",
+    "dev:server": "cross-env NODE_ENV=development tsx watch server/index.ts",
+    "dev:server:prod": "cross-env NODE_ENV=production tsx watch server/index.ts",
+    "dev:all:local": "concurrently \"yarn run dev\" \"yarn run dev:server\" --names \"vite,api\" --prefix-colors \"cyan,green\"",
+    "dev:all": "concurrently \"yarn run dev:prod\" \"yarn run dev:server:prod\" --names \"vite,api\" --prefix-colors \"cyan,green\"",
+    "build": "vite build --mode production",
     "build:server": "tsc server/index.ts --outDir dist-server",
     "preview": "vite preview",
-    "start:server": "node dist-server/server/index.js"
+    "start:server": "cross-env NODE_ENV=production node dist-server/server/index.js"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -33,6 +36,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "chokidar": "^4.0.3",
     "concurrently": "^9.1.2",
+    "cross-env": "^10.1.0",
     "tsx": "^4.19.2",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

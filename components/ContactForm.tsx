@@ -1,14 +1,13 @@
-import dotenv from 'dotenv';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { CursorHover } from './Cursor';
-dotenv.config();
+
 interface ContactFormProps {
   idPrefix: string;
 }
 
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // Schéma de validation
 const validationSchema = yup.object().shape({

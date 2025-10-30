@@ -236,7 +236,7 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
   return (
     <section id="services" className="w-full">
       <div ref={sectionRef} className="relative max-w-[1800px] mx-auto">
-        <div className="sticky top-0 h-screen w-full grid grid-cols-1 md:grid-cols-5 overflow-hidden px-8 gap-x-8">
+        <div className="hidden md:grid sticky top-0 h-screen w-full md:grid-cols-5 overflow-hidden px-8 gap-x-8">
           <AnimatedTitle
             lenis={lenis}
             isActive={isActive}

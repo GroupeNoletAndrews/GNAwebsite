@@ -193,7 +193,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     role: 'Co-Fondateur',
     description:
       "Passionné par l'intersection de la technologie et de la stratégie d'affaires, Édouard guide nos clients à travers le paysage numérique complexe pour découvrir des opportunités de croissance inexploitées. Son expertise réside dans la transformation des défis en résultats tangibles.",
-    imageUrl: '/images/team/cf_en.jpg',
+    imageUrl: 'https://picsum.photos/seed/edouard/800/800',
     align: 'left',
   },
   {

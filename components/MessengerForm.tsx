@@ -1,11 +1,9 @@
-import dotenv from 'dotenv';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 import * as yup from 'yup';
 import { CursorHover } from './Cursor';
-dotenv.config();
 
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 interface Message {
   id: string;
