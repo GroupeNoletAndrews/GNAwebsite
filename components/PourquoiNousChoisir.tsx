@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import type Lenis from 'lenis';
 import React, { useRef } from 'react';
-import { AnimatedContainer, itemVariants } from './Animated';
+import { useIsMobile } from '../lib/use-is-mobile';
+import { AnimatedContainer, useItemVariants } from './Animated';
 import { AnimatedTitle } from './AnimatedTitle';
 import { WobbleCard } from './ui/WobbleCard';
 
@@ -50,6 +51,8 @@ const PourquoiNousChoisir: React.FC<PourquoiNousChoisirProps> = ({ isActive, len
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardsListRef = useRef<HTMLDivElement>(null);
   const cardsColumnRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const itemVariants = useItemVariants();
 
   const mobileLayout = (
     <AnimatedContainer

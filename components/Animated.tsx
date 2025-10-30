@@ -64,13 +64,21 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
 }) => {
   const isMobile = useIsMobile();
 
+  // Sur mobile, utiliser un div simple sans animations pour éviter les problèmes de rendu
+  if (isMobile) {
+    return (
+      <div className={className} style={{ opacity: 1 }}>
+        {children}
+      </div>
+    );
+  }
+
   const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
-        // Réduire le stagger sur mobile pour animations plus rapides
-        staggerChildren: isMobile ? stagger * 0.5 : stagger,
-        delayChildren: isMobile ? delay * 0.5 : delay,
+        staggerChildren: stagger,
+        delayChildren: delay,
       },
     },
   };
@@ -80,8 +88,7 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
       className={className}
       initial="hidden"
       whileInView="visible"
-      // Sur mobile, augmenter le threshold pour déclencher l'animation plus facilement
-      viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
       {children}

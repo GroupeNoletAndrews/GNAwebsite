@@ -1,4 +1,6 @@
-m/* Styles globaux pour améliorer la compatibilité mobile */
+/* ============================================
+   Styles globaux pour améliorer la compatibilité mobile
+   ============================================ */
 
 * {
   -webkit-tap-highlight-color: transparent;
@@ -17,7 +19,9 @@ body {
   min-height: -webkit-fill-available;
 }
 
-/* Fix pour les éléments en plein écran sur mobile */
+/* ============================================
+   Fix pour les éléments en plein écran sur mobile
+   ============================================ */
 @media (max-width: 767px) {
   #root {
     min-height: 100vh;
@@ -25,7 +29,9 @@ body {
   }
 }
 
-/* Amélioration des champs de formulaire sur mobile */
+/* ============================================
+   Amélioration des champs de formulaire
+   ============================================ */
 input,
 textarea,
 select,
@@ -42,7 +48,9 @@ select:focus {
   outline: none;
 }
 
-/* Amélioration du scroll pour les éléments avec overflow */
+/* ============================================
+   Amélioration du scroll pour overflow
+   ============================================ */
 .overflow-y-auto,
 .overflow-x-auto,
 .overflow-auto {
@@ -50,43 +58,41 @@ select:focus {
   overscroll-behavior: contain;
 }
 
-/* Fix pour les animations Framer Motion sur mobile */
+/* ============================================
+   Optimisations et fixes pour mobile
+   ============================================ */
 @media (max-width: 767px) {
-  [data-framer-component-type] {
-    will-change: auto !important;
+  /* Force l'affichage de toutes les sections sur mobile */
+  section {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
-}
 
-/* Amélioration de la performance sur mobile */
-@media (max-width: 767px) {
-  * {
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
-}
-
-/* Fix pour les inputs qui zooment sur iOS */
-@media screen and (max-width: 767px) {
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
+  /* Fix pour les inputs qui zooment sur iOS */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
   textarea {
     font-size: 16px !important;
   }
 }
 
-/* Amélioration du touch pour les boutons */
+/* ============================================
+   Amélioration du touch pour les boutons
+   ============================================ */
 button,
 a,
-[role="button"] {
+[role='button'] {
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Fix pour les éléments sticky sur mobile */
+/* ============================================
+   Fix pour les éléments sticky sur mobile
+   ============================================ */
 @supports (-webkit-touch-callout: none) {
   .sticky,
   .fixed {
