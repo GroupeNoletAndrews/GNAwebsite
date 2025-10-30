@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { SOCIAL_LINKS } from '../constants';
-import { AnimatedContainer, itemVariants } from './Animated';
+import { useIsMobile } from '../lib/use-is-mobile';
+import { AnimatedContainer, useItemVariants } from './Animated';
 import ContactForm from './ContactForm';
 import { CursorHover } from './Cursor';
 import Footer from './Footer';
@@ -13,10 +14,19 @@ interface ContactProps {
 
 const Contact: React.FC<ContactProps> = ({ isActive }) => {
   const [isMessengerMode, setIsMessengerMode] = useState(true);
-  const variants = {
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: 0.3, when: 'beforeChildren' } },
-    hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
-  };
+  const isMobile = useIsMobile();
+  const itemVariants = useItemVariants();
+
+  // Variants simplifiés sur mobile (pas de scale)
+  const variants = isMobile
+    ? {
+        visible: { opacity: 1, transition: { duration: 0.4 } },
+        hidden: { opacity: 0, transition: { duration: 0.3 } },
+      }
+    : {
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: 0.3, when: 'beforeChildren' } },
+        hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
+      };
 
   return (
     <>

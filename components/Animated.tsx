@@ -1,11 +1,12 @@
-import React from 'react';
 import { motion, type Variants } from 'framer-motion';
+import React from 'react';
+import { useIsMobile } from '../lib/use-is-mobile';
 
 // Re-export motion for convenience in other components
 export { motion };
 
-// A standard variant for items fading in on scroll
-export const itemVariants: Variants = {
+// Variant standard pour desktop (avec animations complètes)
+export const itemVariantsDesktop: Variants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: {
     opacity: 1,
@@ -18,6 +19,29 @@ export const itemVariants: Variants = {
   },
 };
 
+// Variant simplifié pour mobile (seulement opacity, pas de transformations)
+export const itemVariantsMobile: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      ease: 'easeOut',
+    },
+  },
+};
+
+// Export conditionnel basé sur le device (fallback desktop par défaut)
+export const itemVariants: Variants = itemVariantsDesktop;
+
+/**
+ * Hook pour obtenir les variants appropriés selon le device
+ */
+export function useItemVariants(): Variants {
+  const isMobile = useIsMobile();
+  return isMobile ? itemVariantsMobile : itemVariantsDesktop;
+}
+
 interface AnimatedContainerProps {
   children: React.ReactNode;
   className?: string;
@@ -29,6 +53,8 @@ interface AnimatedContainerProps {
  * A container that animates its children into view when it's scrolled to.
  * Use stagger prop for list animations. For single items, just wrap them.
  * Children that need to be animated must be <motion.div> or similar and have a `variants` prop.
+ *
+ * Sur mobile, les animations sont simplifiées pour améliorer la performance et l'affichage.
  */
 export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   children,
@@ -36,12 +62,15 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   stagger = 0,
   delay = 0,
 }) => {
+  const isMobile = useIsMobile();
+
   const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: stagger,
-        delayChildren: delay,
+        // Réduire le stagger sur mobile pour animations plus rapides
+        staggerChildren: isMobile ? stagger * 0.5 : stagger,
+        delayChildren: isMobile ? delay * 0.5 : delay,
       },
     },
   };
@@ -51,7 +80,8 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      // Sur mobile, augmenter le threshold pour déclencher l'animation plus facilement
+      viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
       variants={containerVariants}
     >
       {children}

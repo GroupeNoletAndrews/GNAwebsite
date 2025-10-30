@@ -1,30 +1,44 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { AnimatedContainer, itemVariants } from './Animated';
+import { useIsMobile } from '../lib/use-is-mobile';
+import { AnimatedContainer, useItemVariants } from './Animated';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({
   icon,
   title,
   children,
-}) => (
-  <motion.div variants={itemVariants} className="flex flex-col items-center text-center p-4 sm:p-6">
-    <div className="flex-shrink-0 mb-3 sm:mb-4 flex items-center justify-center h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-gray-900 text-white">
-      <div className="scale-75 sm:scale-100">{icon}</div>
-    </div>
-    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{title}</h3>
-    <p className="text-base sm:text-lg text-gray-400">{children}</p>
-  </motion.div>
-);
+}) => {
+  const itemVariants = useItemVariants();
+  
+  return (
+    <motion.div variants={itemVariants} className="flex flex-col items-center text-center p-4 sm:p-6">
+      <div className="flex-shrink-0 mb-3 sm:mb-4 flex items-center justify-center h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-gray-900 text-white">
+        <div className="scale-75 sm:scale-100">{icon}</div>
+      </div>
+      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{title}</h3>
+      <p className="text-base sm:text-lg text-gray-400">{children}</p>
+    </motion.div>
+  );
+};
 
 interface AboutProps {
   isActive?: boolean;
 }
 
 const About: React.FC<AboutProps> = ({ isActive }) => {
-  const variants = {
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: 0.3, when: 'beforeChildren' } },
-    hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
-  };
+  const isMobile = useIsMobile();
+  const itemVariants = useItemVariants();
+  
+  // Variants simplifiés sur mobile (pas de scale)
+  const variants = isMobile
+    ? {
+        visible: { opacity: 1, transition: { duration: 0.4 } },
+        hidden: { opacity: 0, transition: { duration: 0.3 } },
+      }
+    : {
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: 0.3, when: 'beforeChildren' } },
+        hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
+      };
 
   return (
     <section id="about" className="w-full min-h-screen flex items-center justify-center py-16 sm:py-20 lg:py-24">

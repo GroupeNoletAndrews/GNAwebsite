@@ -1,7 +1,15 @@
 # Corrections pour l'affichage mobile
 
-## Problème identifié
+## Problèmes identifiés
+
+### 1. Formulaire de contact
 Le formulaire de contact ne s'affichait pas correctement sur mobile (iPhone 14) après le déploiement.
+
+### 2. Barre de navigation
+La barre de navigation n'était pas responsive et le menu mobile ne fonctionnait pas correctement.
+
+### 3. Sections qui ne s'affichent pas
+Certaines sections complètes (About, Services, Contact, etc.) ne s'affichaient pas sur mobile à cause des animations Framer Motion trop complexes.
 
 ## Causes principales
 
@@ -12,6 +20,55 @@ Le formulaire de contact ne s'affichait pas correctement sur mobile (iPhone 14) 
 5. **Absence de styles mobiles** : Pas de styles CSS spécifiques pour gérer les particularités d'iOS
 
 ## Corrections apportées
+
+### 0. Système de détection mobile (nouveau)
+
+#### `lib/use-is-mobile.ts` - Hook personnalisé
+```typescript
+export function useIsMobile(breakpoint: number = 768): boolean
+```
+- ✅ Détecte si l'utilisateur est sur mobile
+- ✅ Écoute les changements de taille d'écran
+- ✅ Utilisé partout pour adapter les animations et le comportement
+
+#### `components/Animated.tsx` - Simplification des animations
+```typescript
+// Desktop: animations complètes
+export const itemVariantsDesktop: Variants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1 }
+};
+
+// Mobile: animations simplifiées (pas de transformations)
+export const itemVariantsMobile: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+};
+
+export function useItemVariants(): Variants {
+  const isMobile = useIsMobile();
+  return isMobile ? itemVariantsMobile : itemVariantsDesktop;
+}
+```
+- ✅ Sur mobile: **seulement opacity** (pas de `y`, `scale`)
+- ✅ Animations 2x plus rapides sur mobile (`duration: 0.3` vs `0.6`)
+- ✅ `AnimatedContainer` réduit le stagger et delay sur mobile
+- ✅ Threshold d'intersection plus faible (`0.1` vs `0.2`)
+
+#### `components/About.tsx` & `Contact.tsx` - Variants adaptatifs
+```typescript
+const isMobile = useIsMobile();
+const itemVariants = useItemVariants();
+
+const variants = isMobile
+  ? { visible: { opacity: 1 }, hidden: { opacity: 0 } }
+  : { visible: { opacity: 1, scale: 1 }, hidden: { opacity: 0, scale: 0.95 } };
+```
+- ✅ Supprime les animations de scale sur mobile
+- ✅ Utilise des variants conditionnels basés sur le device
+- ✅ Améliore drastiquement les performances sur iOS
+
+## Corrections du formulaire
 
 ### 1. `index.html` - Gestion du overflow responsive
 ```css
@@ -81,12 +138,40 @@ Création d'un fichier CSS dédié avec :
 - ✅ Fix pour les animations Framer Motion
 - ✅ Amélioration du `touch-action` pour les boutons
 
-### 7. `index.html` - Amélioration du viewport
+### 7. `index.html` - Amélioration du viewport et overflow responsive
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
 ```
 - ✅ Permet le zoom utilisateur (accessibilité)
 - ✅ Limite le zoom max à 5.0
+
+## Corrections de la navigation (Header)
+
+### 8. `components/Header.tsx` - Navigation mobile améliorée
+
+```typescript
+// Logo toujours visible sur mobile
+className={`${isScrolled ? 'opacity-100' : 'md:opacity-0 md:pointer-events-none opacity-100'}`}
+
+// Menu hamburger amélioré avec animations
+<AnimatePresence>
+  {isOpen && (
+    <motion.div 
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+    >
+```
+
+- ✅ Logo visible en permanence sur mobile (pas seulement après scroll)
+- ✅ Hauteur responsive: `h-20 sm:h-24 md:h-28`
+- ✅ Menu mobile avec `AnimatePresence` pour transitions fluides
+- ✅ Bouton hamburger avec rotation animée
+- ✅ Bloc le scroll du body quand le menu est ouvert
+- ✅ Ferme automatiquement le menu lors du changement de section
+- ✅ Items du menu avec animations séquentielles (stagger)
+- ✅ Amélioration visuelle: border, shadow-lg, touch-manipulation
+- ✅ Taille de texte adaptative: `text-base sm:text-lg`
 
 ## Comment tester
 
@@ -169,8 +254,23 @@ git push origin main
 
 ## Checklist de vérification mobile
 
+### Général
+- [ ] Toutes les sections s'affichent correctement (Hero, About, Services, Team, Pourquoi nous choisir, Contact)
+- [ ] Le scroll fonctionne correctement (natif, pas de blocage)
+- [ ] Les animations sont fluides (pas de saccades)
+- [ ] Pas de contenu coupé ou hors écran
+
+### Navigation (Header)
+- [ ] Logo visible en permanence
+- [ ] Bouton hamburger accessible et cliquable
+- [ ] Menu mobile s'ouvre avec animation
+- [ ] Items du menu sont cliquables
+- [ ] Le menu se ferme après navigation
+- [ ] Pas de scroll du body quand le menu est ouvert
+
+### Formulaire de contact
 - [ ] Le formulaire est visible sur mobile
-- [ ] Le scroll fonctionne correctement
+- [ ] Le scroll fonctionne dans le formulaire
 - [ ] Les champs de saisie sont cliquables
 - [ ] Pas de zoom automatique sur les inputs
 - [ ] Les animations sont fluides
@@ -179,13 +279,42 @@ git push origin main
 - [ ] Les messages de validation s'affichent
 - [ ] Le clavier mobile ne cache pas le champ actif
 
+### Sections About et Contact
+- [ ] Les cartes/éléments s'affichent
+- [ ] Les animations de fade-in fonctionnent
+- [ ] Pas de problème avec les animations scale
+- [ ] Le texte est lisible
+
 ## Notes importantes
 
 1. **Performance mobile** : Les animations et effets ont été simplifiés pour mobile
+   - Pas de transformations `scale` ou `y` sur mobile
+   - Seulement `opacity` pour les transitions
+   - Durées réduites de 50% (`0.3s` vs `0.6s`)
+   - Stagger et delays réduits de 50%
+   
 2. **Scroll natif** : Sur mobile, on utilise le scroll natif iOS au lieu de Lenis
+   - Désactivation de Lenis pour `window.innerWidth < 768`
+   - Ajout de `-webkit-overflow-scrolling: touch`
+   - `overscrollBehavior: contain`
+
 3. **Touch events** : Tous les éléments interactifs ont `touch-manipulation`
+   - Améliore la réactivité des boutons
+   - Réduit le délai de 300ms sur iOS
+   
 4. **Font size** : Les inputs ont minimum 16px pour éviter le zoom iOS
+   - Critère d'accessibilité
+   - Empêche le zoom automatique d'iOS
+   
 5. **Viewport height** : Utilise `-webkit-fill-available` pour iOS
+   - Fix pour les barres d'adresse mobile
+   - Garantit le plein écran
+   
+6. **Framer Motion sur mobile** :
+   - Hook `useIsMobile()` pour détecter le device
+   - Variants conditionnels (desktop vs mobile)
+   - `AnimatedContainer` adaptatif
+   - Threshold d'intersection réduit (`0.1` vs `0.2`)
 
 ## Problèmes connus et solutions
 
@@ -193,13 +322,27 @@ git push origin main
 **Solution** : Ajouter un listener de resize dans `Contact.tsx`
 
 ### Les animations saccadent sur mobile
-**Solution** : Déjà implémenté - animations simplifiées (opacity seulement)
+**Solution** : ✅ **RÉSOLU** - animations simplifiées (opacity seulement sur mobile)
+- Utilise `useIsMobile()` et `useItemVariants()`
+- Pas de transformations CSS sur mobile
 
 ### Le clavier cache le champ actif
-**Solution** : iOS gère cela automatiquement avec le scroll natif activé
+**Solution** : ✅ **RÉSOLU** - iOS gère cela automatiquement avec le scroll natif activé
 
 ### Le formulaire est trop grand sur petits écrans
-**Solution** : Déjà implémenté - hauteurs responsive avec min/max-h
+**Solution** : ✅ **RÉSOLU** - hauteurs responsive avec min/max-h
+
+### Les sections ne s'affichent pas (About, Contact, etc.)
+**Solution** : ✅ **RÉSOLU** - animations Framer Motion simplifiées
+- Suppression des `scale` sur mobile
+- Variants conditionnels basés sur `useIsMobile()`
+- Threshold d'intersection réduit pour déclencher plus facilement
+
+### Le menu mobile ne s'ouvre pas
+**Solution** : ✅ **RÉSOLU** - animations avec `AnimatePresence`
+- Animation de hauteur: `height: 0` → `height: 'auto'`
+- Rotation du bouton hamburger
+- Bloc du scroll du body pendant l'ouverture
 
 ## Support
 
