@@ -7,13 +7,5 @@
       "source": "/api/:path*",
       "destination": "/api/:path*"
     }
-  ],
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "env": {
-    "VITE_API_URL": ""
-  }
+  ]
 }
