@@ -365,7 +365,7 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   };
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden h-[450px] sm:h-[500px] lg:h-[600px] flex flex-col">
+    <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden min-h-[450px] max-h-[450px] sm:min-h-[500px] sm:max-h-[500px] lg:min-h-[600px] lg:max-h-[600px] flex flex-col touch-manipulation">
       {/* Header */}
       <div className="bg-gray-800/50 border-b border-gray-700/50 p-3 sm:p-4 flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">

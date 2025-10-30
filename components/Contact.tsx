@@ -78,24 +78,26 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-10">Envoyer un message</h3>
 
                     {/* Formulaire conditionnel */}
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="wait" initial={false}>
                       {isMessengerMode ? (
                         <motion.div
                           key="messenger"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                          transition={{ duration: 0.3 }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="w-full"
                         >
                           <MessengerForm idPrefix="page" />
                         </motion.div>
                       ) : (
                         <motion.div
                           key="classic"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                          transition={{ duration: 0.3 }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="w-full"
                         >
                           <ContactForm idPrefix="page" />
                         </motion.div>

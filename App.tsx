@@ -20,6 +20,12 @@ export default function App() {
   useEffect(() => {
     if (!scrollRef.current) return;
 
+    // Désactiver Lenis sur mobile pour utiliser le scroll natif
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      return;
+    }
+
     const lenisInstance = new Lenis({
       wrapper: scrollRef.current,
       duration: 1.2,
@@ -114,7 +120,11 @@ export default function App() {
       <div
         ref={scrollRef}
         className="bg-transparent text-gray-300 h-full w-full overflow-y-auto overflow-x-hidden"
-        style={{ scrollBehavior: 'auto' }}
+        style={{
+          scrollBehavior: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
+        }}
       >
         <Header onNavigate={handleNavigate} activeIndex={activeIndex} />
 

@@ -3,41 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Groupe Nolet & Andrews</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      html, body, #root {
+      html,
+      body,
+      #root {
         margin: 0;
         padding: 0;
         height: 100%;
         width: 100%;
-        overflow: hidden; /* Prevent native browser scroll, giving control to our custom scroller */
+      }
+      /* Desktop: custom overflow control */
+      @media (min-width: 768px) {
+        html,
+        body,
+        #root {
+          overflow: hidden;
+        }
+      }
+      /* Mobile: allow native scroll */
+      @media (max-width: 767px) {
+        html,
+        body,
+        #root {
+          overflow: auto;
+        }
       }
       body {
         font-family: 'Manrope', sans-serif;
-        background-color: #000
+        background-color: #000;
+        -webkit-overflow-scrolling: touch;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react-dom": "https://aistudiocdn.com/react-dom@^19.1.1",
-    "ogl": "https://esm.sh/ogl@0.0.101",
-    "framer-motion": "https://esm.sh/framer-motion@11.2.12?external=react",
-    "clsx": "https://esm.sh/clsx@2.1.1",
-    "tailwind-merge": "https://esm.sh/tailwind-merge@2.3.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+    <script type="importmap">
+      {
+        "imports": {
+          "react/": "https://aistudiocdn.com/react@^19.1.1/",
+          "react": "https://aistudiocdn.com/react@^19.1.1",
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+          "react-dom": "https://aistudiocdn.com/react-dom@^19.1.1",
+          "ogl": "https://esm.sh/ogl@0.0.101",
+          "framer-motion": "https://esm.sh/framer-motion@11.2.12?external=react",
+          "clsx": "https://esm.sh/clsx@2.1.1",
+          "tailwind-merge": "https://esm.sh/tailwind-merge@2.3.0"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
   <body class="text-gray-300">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>

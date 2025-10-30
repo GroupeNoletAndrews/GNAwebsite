@@ -150,7 +150,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ idPrefix }) => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="space-y-5 sm:space-y-8 lg:space-y-10"
+      className="space-y-5 sm:space-y-8 lg:space-y-10 w-full touch-manipulation"
       initial="hidden"
       animate="visible"
       variants={{
