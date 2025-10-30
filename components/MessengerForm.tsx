@@ -1,7 +1,11 @@
+import dotenv from 'dotenv';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 import * as yup from 'yup';
 import { CursorHover } from './Cursor';
+dotenv.config();
+
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 interface Message {
   id: string;
@@ -17,7 +21,7 @@ interface MessengerFormProps {
 
 const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [currentStep, setCurrentStep] = useState(-1); // -1 = message d'accueil initial, 0+ = questions de formulaire
+  const [currentStep, setCurrentStep] = useState(-1);
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -32,14 +36,6 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   const [hasError, setHasError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Index des messages :
-  // 0 : Accueil
-  // 1 : Demande prénom (currentStep 0)
-  // 2 : Demande nom (currentStep 1)
-  // 3 : Demande téléphone (currentStep 2)
-  // 4 : Demande email (currentStep 3)
-  // 5 : Demande message (currentStep 4)
-  // 6 : Message final
   const botMessages = [
     "Salut ! 👋 Je suis l'assistant de Groupe Nolet & Andrews. Comment puis-je vous aider aujourd'hui ?",
     'Parfait ! Pour commencer, quel est votre prénom ?',
@@ -53,7 +49,6 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   const fieldKeys = ['firstName', 'lastName', 'phone', 'email', 'message'] as const;
   const fieldLabels = ['prénom', 'nom de famille', 'numéro de téléphone', 'adresse email', 'message'];
 
-  // Schémas de validation pour chaque champ - validation directe sans objet
   const fieldValidators: any = {
     firstName: yup
       .string()
@@ -75,7 +70,6 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   };
 
   useEffect(() => {
-    // Message initial du bot
     const initialMessage: Message = {
       id: '1',
       sender: 'bot',
@@ -84,7 +78,6 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
     };
     setMessages([initialMessage]);
 
-    // Démarrer la conversation après 1 seconde
     setTimeout(() => {
       setIsTyping(true);
       setTimeout(() => {
@@ -95,33 +88,24 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
   }, []);
 
   useEffect(() => {
-    // Ne faire le scroll automatique que si l'utilisateur a déjà interagi avec le chat
-    // Cela évite le scroll automatique au chargement de la page
     if (hasUserInteracted && (messages.length > 1 || isTyping)) {
       scrollToBottom();
     }
   }, [messages, isTyping, hasUserInteracted]);
 
   const scrollToBottom = () => {
-    // Utiliser scrollIntoView seulement si l'élément est visible dans le viewport
     if (messagesEndRef.current) {
       const rect = messagesEndRef.current.getBoundingClientRect();
       const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
 
-      // Ne faire le scroll que si l'utilisateur est déjà dans la section contact
       if (isVisible) {
-        // Utiliser requestAnimationFrame pour une synchronisation parfaite avec le rendu
         requestAnimationFrame(() => {
-          // Trouver le conteneur de messages parent
           const messagesContainer = messagesEndRef.current?.closest('.overflow-y-auto');
           if (messagesContainer) {
-            // Scroll instantané vers le bas du conteneur de messages
-            // Cela évite les conflits avec Lenis et les animations
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
           } else {
-            // Fallback avec scrollIntoView si le conteneur n'est pas trouvé
             messagesEndRef.current?.scrollIntoView({
-              behavior: 'instant', // Changé de 'smooth' à 'instant' pour éviter les conflits
+              behavior: 'instant',
               block: 'end',
               inline: 'nearest',
             });
@@ -135,10 +119,8 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    // Marquer que l'utilisateur a interagi avec le chat
     setHasUserInteracted(true);
 
-    // Ajouter le message de l'utilisateur
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       sender: 'user',
@@ -156,20 +138,18 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
       });
     });
 
-    // Si c'est le message d'accueil initial (currentStep === -1)
     if (currentStep === -1) {
       setIsTyping(true);
 
       setTimeout(() => {
         setIsTyping(false);
 
-        // Passer à la première vraie question (prénom)
         setCurrentStep(0);
 
         const botMessage: Message = {
           id: `bot-${Date.now()}`,
           sender: 'bot',
-          content: botMessages[1], // "Parfait ! Pour commencer, quel est votre prénom ?"
+          content: botMessages[1],
           timestamp: new Date(),
         };
 
@@ -186,40 +166,34 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
         }, 1000);
       }, 1500);
 
-      return; // Sortir de la fonction, pas de validation
+      return;
     }
 
-    // Pour les étapes normales (0+), continuer avec la validation
     try {
       const field = fieldKeys[currentStep];
       const validator = fieldValidators[field];
 
-      // Valider directement la valeur
       await validator.validate(inputValue.trim());
 
-      // Si validation réussie
       setHasError(false);
       setUserData(prev => ({ ...prev, [field]: inputValue.trim() }));
 
-      // Réponse du bot après 1.5 secondes
-      setTimeout(() => {
+      setTimeout(async () => {
         setIsTyping(false);
 
         if (currentStep < fieldKeys.length - 1) {
-          // Prochaine question
           const nextStep = currentStep + 1;
           setCurrentStep(nextStep);
 
           const botMessage: Message = {
             id: `bot-${Date.now()}`,
             sender: 'bot',
-            content: botMessages[nextStep + 1], // nextStep + 1 pour afficher la bonne question
+            content: botMessages[nextStep + 1],
             timestamp: new Date(),
           };
 
           setMessages(prev => [...prev, botMessage]);
 
-          // Scroll après l'ajout du message du bot
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               scrollToBottom();
@@ -230,15 +204,49 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
             setInputValue('');
           }, 1000);
         } else {
-          // Message final
-          const finalMessage: Message = {
-            id: `bot-final-${Date.now()}`,
-            sender: 'bot',
-            content: botMessages[botMessages.length - 1], // -1 pour obtenir le dernier message
-            timestamp: new Date(),
-          };
+          const updatedUserData = { ...userData, [field]: inputValue.trim() };
 
-          setMessages(prev => [...prev, finalMessage]);
+          try {
+            const response = await fetch(`${API_URL}/api/contact`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(updatedUserData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              const finalMessage: Message = {
+                id: `bot-final-${Date.now()}`,
+                sender: 'bot',
+                content: botMessages[botMessages.length - 1],
+                timestamp: new Date(),
+              };
+
+              setMessages(prev => [...prev, finalMessage]);
+            } else {
+              const errorMessage: Message = {
+                id: `bot-error-${Date.now()}`,
+                sender: 'bot',
+                content: `❌ Désolé, une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer ou nous contacter directement.`,
+                timestamp: new Date(),
+              };
+
+              setMessages(prev => [...prev, errorMessage]);
+            }
+          } catch (error) {
+            console.error("Erreur lors de l'envoi:", error);
+            const errorMessage: Message = {
+              id: `bot-error-${Date.now()}`,
+              sender: 'bot',
+              content: `❌ Impossible de se connecter au serveur. Veuillez vérifier votre connexion et réessayer.`,
+              timestamp: new Date(),
+            };
+
+            setMessages(prev => [...prev, errorMessage]);
+          }
 
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -252,36 +260,28 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
         }
       }, 1500);
     } catch (error: any) {
-      // Si validation échoue
       setHasError(true);
 
-      // Capturer currentStep au moment de l'erreur pour éviter qu'il ne change
       const stepAtError = currentStep;
 
       setTimeout(() => {
         setIsTyping(false);
 
-        // Utiliser le bon libellé pour l'étape où l'erreur s'est produite
         const fieldLabel = fieldLabels[stepAtError];
         const capitalizedField = fieldLabel.charAt(0).toUpperCase() + fieldLabel.slice(1);
 
-        // Créer un message d'erreur personnalisé selon le code d'erreur
         let customError = '';
 
-        // Déterminer le type de champ pour les messages spécifiques
         const currentField = fieldKeys[stepAtError];
 
-        // Vérifier si le message contient nos codes personnalisés
         if (error.message === 'REQUIRED') {
           customError = `${capitalizedField} est requis`;
         } else if (error.message === 'MIN-2') {
           customError = `${capitalizedField} doit contenir au moins 2 caractères`;
         } else if (error.message === 'MIN-10') {
           if (currentField === 'phone') {
-            // Phone
             customError = `${capitalizedField} doit contenir au moins 10 chiffres`;
           } else {
-            // Message
             customError = `${capitalizedField} doit contenir au moins 10 caractères`;
           }
         } else if (error.message === 'LETTERS_ONLY') {
@@ -291,7 +291,6 @@ const MessengerForm: React.FC<MessengerFormProps> = ({ idPrefix }) => {
         } else if (error.message === 'EMAIL_INVALID') {
           customError = 'Veuillez saisir une adresse email valide';
         } else {
-          // Fallback pour les messages imprévus
           customError = `${capitalizedField} est invalide`;
         }
 

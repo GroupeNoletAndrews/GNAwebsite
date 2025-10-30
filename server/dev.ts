@@ -1,4 +1,3 @@
-// Script de développement avec rechargement automatique
 import { spawn } from 'child_process';
 import chokidar from 'chokidar';
 
@@ -21,10 +20,8 @@ function startServer() {
   });
 }
 
-// Démarrer le serveur
 startServer();
 
-// Surveiller les changements
 const watcher = chokidar.watch(['server/**/*.ts', 'lib/email.ts'], {
   persistent: true,
   ignoreInitial: true,
@@ -37,11 +34,9 @@ watcher.on('change', path => {
 
 // Gestion de l'arrêt propre
 process.on('SIGINT', () => {
-  console.log('\n👋 Arrêt du serveur...');
   if (serverProcess) {
     serverProcess.kill();
   }
   watcher.close();
   process.exit(0);
 });
-

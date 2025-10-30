@@ -1,11 +1,14 @@
+import dotenv from 'dotenv';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { CursorHover } from './Cursor';
-
+dotenv.config();
 interface ContactFormProps {
   idPrefix: string;
 }
+
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 // Schéma de validation
 const validationSchema = yup.object().shape({
@@ -98,15 +101,34 @@ const ContactForm: React.FC<ContactFormProps> = ({ idPrefix }) => {
 
     setIsSubmitting(true);
 
-    // Simulation d'envoi
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setStatus('Message envoyé avec succès !');
-    setFormData({ firstName: '', lastName: '', phone: '', email: '', message: '' });
-    setErrors({});
-    setTouched({});
-    setTimeout(() => setStatus(''), 3000);
-    setIsSubmitting(false);
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('Message envoyé avec succès !');
+        setFormData({ firstName: '', lastName: '', phone: '', email: '', message: '' });
+        setErrors({});
+        setTouched({});
+        setTimeout(() => setStatus(''), 5000);
+      } else {
+        setStatus(`Erreur: ${result.error || 'Une erreur est survenue'}`);
+        setTimeout(() => setStatus(''), 5000);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi:", error);
+      setStatus('Erreur de connexion au serveur');
+      setTimeout(() => setStatus(''), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fieldVariants = {

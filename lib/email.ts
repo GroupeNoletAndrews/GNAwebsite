@@ -13,7 +13,6 @@ export async function sendContactEmail(data: ContactFormData) {
 
   const { firstName, lastName, email, phone, message } = data;
 
-  // Charger le template HTML
   const htmlTemplate = `<!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -202,20 +201,11 @@ export async function sendContactEmail(data: ContactFormData) {
 
   try {
     const result = await resend.emails.send({
-      from: 'Site Web GNA <noreply@noletandrews.ca>', // Remplacer par votre domaine vérifié
-      to: ['info@noletandrews.ca'], // Email de destination
-      replyTo: email, // Email du client pour pouvoir répondre directement
+      from: 'Formulaire GNA <info@noletandrews.ca>',
+      to: ['info@noletandrews.ca'],
+      replyTo: email,
       subject: `Nouvelle demande de contact - ${firstName} ${lastName}`,
       html: htmlTemplate,
-      text: `Nouvelle demande de contact
-      
-Prénom: ${firstName}
-Nom: ${lastName}
-Email: ${email}
-Téléphone: ${phone}
-
-Message:
-${message}`,
     });
 
     return { success: true, data: result };
