@@ -85,8 +85,14 @@ export default function App() {
 
   const handleNavigate = (index: number) => {
     const target = sectionRefs.current[index];
-    if (lenis && target) {
+    if (!target) return;
+
+    if (lenis) {
+      // Utiliser Lenis sur desktop pour un scroll fluide
       lenis.scrollTo(target, { offset: 0, duration: 2 });
+    } else {
+      // Fallback pour mobile ou si Lenis n'est pas initialisé
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
