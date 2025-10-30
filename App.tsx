@@ -2,7 +2,6 @@ import Lenis from 'lenis';
 import { useEffect, useRef, useState } from 'react';
 import About from './components/About';
 import Contact from './components/Contact';
-import ContactModal from './components/ContactModal';
 import { CursorProvider } from './components/Cursor';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -14,7 +13,6 @@ import Team from './components/Team';
 export default function App() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [lenis, setLenis] = useState<Lenis | null>(null);
-  const [isContactModalOpen, setContactModalOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -97,7 +95,8 @@ export default function App() {
   };
 
   const handleContactClick = () => {
-    setContactModalOpen(true);
+    // Naviguer vers la section contact (index 5)
+    handleNavigate(5);
   };
 
   const sectionComponents = [
@@ -152,8 +151,6 @@ export default function App() {
             );
           })}
         </main>
-
-        <ContactModal isOpen={isContactModalOpen} onClose={() => setContactModalOpen(false)} />
       </div>
     </CursorProvider>
   );
