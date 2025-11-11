@@ -86,3 +86,7 @@ out/
 .output
 .expo/
 .expo-shared/
+.env*
+!.env.template
+!.env.development.example
+!.env.production.example
