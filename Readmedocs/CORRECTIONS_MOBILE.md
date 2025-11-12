@@ -255,7 +255,7 @@ git push origin main
 ## Checklist de vérification mobile
 
 ### Général
-- [ ] Toutes les sections s'affichent correctement (Hero, About, Services, Team, Pourquoi nous choisir, Contact)
+- [ ] Toutes les sections s'affichent correctement (Hero, About, Services, Team, Pourquoi Nous choisir, Contact)
 - [ ] Le scroll fonctionne correctement (natif, pas de blocage)
 - [ ] Les animations sont fluides (pas de saccades)
 - [ ] Pas de contenu coupé ou hors écran

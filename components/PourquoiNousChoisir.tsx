@@ -89,7 +89,7 @@ const PourquoiNousChoisir: React.FC<PourquoiNousChoisirProps> = ({ isActive, len
               <AnimatedTitle
                 lenis={lenis}
                 isActive={isActive}
-                title="Pourquoi nous choisir ?"
+                title="Pourquoi Nous choisir ?"
                 description="Et si vos opérations étaient aussi agiles que votre vision d’affaires ?"
                 sectionRef={sectionRef}
                 cardsListRef={cardsListRef}

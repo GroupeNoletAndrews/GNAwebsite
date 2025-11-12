@@ -2,9 +2,11 @@ import { motion } from 'framer-motion';
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 // --- Context ---
+type CursorVariant = 'default' | 'text' | 'button' | 'link';
+
 interface CursorContextProps {
-  setHoveredElement: (element: HTMLElement | null) => void;
-  setCursorVariant: (variant: 'default' | 'text') => void;
+  setHoveredElement: (element: HTMLElement | null, padding?: number) => void;
+  setCursorVariant: (variant: CursorVariant) => void;
 }
 const CursorContext = createContext<CursorContextProps | null>(null);
 
@@ -15,7 +17,11 @@ interface CursorProviderProps {
 export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [hoveredElement, setHoveredElement] = useState<HTMLElement | null>(null);
-  const [cursorVariant, setCursorVariant] = useState<'default' | 'text'>('default');
+  const [cursorVariant, setCursorVariant] = useState<CursorVariant>('default');
+  const [highlightStyle, setHighlightStyle] = useState({
+    borderRadius: '0.5rem',
+    padding: 0,
+  });
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const cursorFollowerRef = useRef<HTMLDivElement>(null);
@@ -67,10 +73,44 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   const elementRect = hoveredElement?.getBoundingClientRect();
 
   const contextValue = {
-    setHoveredElement: (el: HTMLElement | null) => {
+    setHoveredElement: (el: HTMLElement | null, padding: number = 0) => {
       setHoveredElement(el);
-      // If setting a hover element, ensure the variant is default (not text).
-      if (el) setCursorVariant('default');
+
+      // Copier TOUS les styles pertinents de l'élément
+      if (el) {
+        const styles = window.getComputedStyle(el);
+
+        // Récupérer les 4 valeurs de border-radius séparément
+        const topLeft = styles.borderTopLeftRadius;
+        const topRight = styles.borderTopRightRadius;
+        const bottomRight = styles.borderBottomRightRadius;
+        const bottomLeft = styles.borderBottomLeftRadius;
+
+        // Construire le border-radius complet
+        let borderRadius = `${topLeft} ${topRight} ${bottomRight} ${bottomLeft}`;
+
+        // Debug complet
+        console.log('=== DEBUG CURSOR ===');
+        console.log('Element:', el.tagName, el.className);
+        console.log('Border-radius brut:', styles.borderRadius);
+        console.log('Border-radius détaillé:', { topLeft, topRight, bottomRight, bottomLeft });
+        console.log('Largeur:', styles.width);
+        console.log('Hauteur:', styles.height);
+        console.log('Padding:', styles.padding);
+        console.log('Padding ajouté au highlight:', padding);
+
+        setHighlightStyle({
+          borderRadius: borderRadius,
+          padding: padding,
+        });
+
+        setCursorVariant('default');
+      } else {
+        setHighlightStyle({
+          borderRadius: '0.5rem',
+          padding: 0,
+        });
+      }
     },
     setCursorVariant,
   };
@@ -114,12 +154,13 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
 
       {/* 2. The smooth highlight effect, managed entirely by Framer Motion. */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-lg bg-white/20 mix-blend-exclusion"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] bg-white/20 mix-blend-exclusion"
         animate={{
-          x: elementRect ? elementRect.left - 5 : mousePosition.x,
-          y: elementRect ? elementRect.top - 5 : mousePosition.y,
-          width: elementRect ? elementRect.width + 10 : 0,
-          height: elementRect ? elementRect.height + 10 : 0,
+          x: elementRect ? elementRect.left - highlightStyle.padding / 2 : mousePosition.x,
+          y: elementRect ? elementRect.top - highlightStyle.padding / 2 : mousePosition.y,
+          width: elementRect ? elementRect.width + highlightStyle.padding : 0,
+          height: elementRect ? elementRect.height + highlightStyle.padding : 0,
+          borderRadius: highlightStyle.borderRadius,
         }}
         transition={{ type: 'spring', mass: 0.5, stiffness: 400, damping: 40 }}
       />
@@ -131,12 +172,14 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
 // --- Hover Component Wrapper ---
 interface CursorHoverProps extends Omit<React.AllHTMLAttributes<HTMLElement>, 'as'> {
   children: React.ReactNode;
-  cursorStyle?: 'block' | 'text';
+  cursorStyle?: 'block' | 'text' | 'button' | 'link';
+  padding?: number;
   as?: React.ElementType;
 }
 export const CursorHover: React.FC<CursorHoverProps> = ({
   children,
   cursorStyle = 'block',
+  padding = 10,
   as: Tag = 'div',
   ...props
 }) => {
@@ -150,10 +193,19 @@ export const CursorHover: React.FC<CursorHoverProps> = ({
   const { setHoveredElement, setCursorVariant } = context;
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (cursorStyle === 'block' && ref.current) {
-      setHoveredElement(ref.current);
-    } else if (cursorStyle === 'text') {
+    if (cursorStyle === 'text') {
       setCursorVariant('text');
+    } else if (cursorStyle === 'button' && ref.current) {
+      setCursorVariant('button');
+      // Pour les boutons, détecter l'enfant direct (le vrai button/element)
+      const targetElement = (ref.current.firstElementChild as HTMLElement) || ref.current;
+      setHoveredElement(targetElement, padding);
+    } else if (cursorStyle === 'link' && ref.current) {
+      setCursorVariant('link');
+      const targetElement = (ref.current.firstElementChild as HTMLElement) || ref.current;
+      setHoveredElement(targetElement, padding);
+    } else if (cursorStyle === 'block' && ref.current) {
+      setHoveredElement(ref.current, padding);
     }
     if (props.onMouseEnter) props.onMouseEnter(e);
   };

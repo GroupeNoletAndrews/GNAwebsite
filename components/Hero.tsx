@@ -84,7 +84,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                 isLoaded ? 'opacity-100 translate-y-0 delay-[1000ms] duration-700' : 'opacity-0 translate-y-4'
               }`}
             >
-              Contactez-nous
+              Contactez-Nous
             </CursorHover>
             <CursorHover
               as="button"

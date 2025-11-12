@@ -39,7 +39,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                   variants={itemVariants}
                   className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight"
                 >
-                  Contactez-nous
+                  Contactez-Nous
                 </motion.h2>
                 <motion.p
                   variants={itemVariants}
@@ -58,8 +58,8 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                     <div className="flex flex-col">
                       {/* Switch Toggle */}
                       <div className="flex justify-center mb-6 sm:mb-8">
-                        <div className="bg-gray-800/50 border border-gray-700/50 rounded-full p-1 inline-flex w-full max-w-sm sm:w-auto">
-                          <CursorHover>
+                        <div className="bg-gray-800/50 border ml-4 border-gray-700/50 rounded-full p-2 inline-flex gap-2 w-full max-w-sm sm:w-auto">
+                          <CursorHover cursorStyle="button" padding={4}>
                             <motion.button
                               onClick={() => setIsMessengerMode(false)}
                               className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
@@ -71,7 +71,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                               Formulaire classique
                             </motion.button>
                           </CursorHover>
-                          <CursorHover>
+                          <CursorHover cursorStyle="button" padding={4}>
                             <motion.button
                               onClick={() => setIsMessengerMode(true)}
                               className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
@@ -171,7 +171,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                   variants={itemVariants}
                   className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight"
                 >
-                  Contactez-nous
+                  Contactez-Nous
                 </motion.h2>
                 <motion.p
                   variants={itemVariants}
@@ -190,8 +190,8 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                     <div className="flex flex-col">
                       {/* Switch Toggle */}
                       <div className="flex justify-center mb-6 sm:mb-8">
-                        <div className="bg-gray-800/50 border border-gray-700/50 rounded-full p-1 inline-flex w-full max-w-sm sm:w-auto">
-                          <CursorHover>
+                        <div className="bg-gray-800/50 border border-gray-700/50 rounded-full p-2 inline-flex gap-2 w-full max-w-sm sm:w-auto">
+                          <CursorHover cursorStyle="button" padding={2}>
                             <motion.button
                               onClick={() => setIsMessengerMode(false)}
                               className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
@@ -203,7 +203,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
                               Formulaire classique
                             </motion.button>
                           </CursorHover>
-                          <CursorHover>
+                          <CursorHover cursorStyle="button" padding={2}>
                             <motion.button
                               onClick={() => setIsMessengerMode(true)}
                               className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap ${

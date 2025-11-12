@@ -31,23 +31,6 @@ const ConsultingIcon = () => (
   </svg>
 );
 
-const CybersecurityIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-10 w-10"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 3c4.532 0 8.397-2.93 9.618-7.056a11.955 11.955 0 00-2.318-7.984z"
-    />
-  </svg>
-);
-
 const DataAnalysisIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +107,7 @@ export const NAV_LINKS: NavLink[] = [
   { name: 'À Propos', href: '#about' },
   { name: 'Services', href: '#services' },
   { name: 'Notre Équipe', href: '#team' },
-  { name: 'Pourquoi nous ?', href: '#pourquoi-nous-choisir' },
+  { name: 'Pourquoi Nous ?', href: '#pourquoi-nous-choisir' },
   { name: 'Contact', href: '#contact' },
 ];
 
@@ -177,14 +160,6 @@ export const SERVICES: Service[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   },
-  {
-    icon: <CybersecurityIcon />,
-    title: 'Cybersécurité',
-    description:
-      "Protégez vos données et systèmes avec nos audits de sécurité, la mise en place de protocoles robustes et l'assurance de votre conformité (Loi 25, RGPD).",
-    imageUrl:
-      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
 ];
 
 export const TEAM_MEMBERS: TeamMember[] = [
@@ -220,6 +195,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     imageUrl: '/images/team/dev_jca.jpg',
     align: 'right',
   },
+  
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [

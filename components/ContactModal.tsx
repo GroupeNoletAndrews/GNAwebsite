@@ -11,7 +11,7 @@ interface ContactModalProps {
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-3xl font-bold text-white mb-6 text-center">Contactez-nous</h2>
+      <h2 className="text-3xl font-bold text-white mb-6 text-center">Contactez-Nous</h2>
       <p className="text-lg text-gray-400 mb-8 text-center">Laissez-nous un message et nous vous répondrons rapidement.</p>
       <ContactForm idPrefix="modal" />
     </Modal>

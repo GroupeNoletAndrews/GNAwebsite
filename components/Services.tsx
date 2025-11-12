@@ -67,34 +67,6 @@ const expandedServiceContent: Record<string, React.ReactNode> = {
       </p>
     </div>
   ),
-  'Cybersécurité et conformité': (
-    <div className="prose prose-invert prose-xl max-w-none text-gray-300 prose-headings:text-white prose-headings:font-semibold">
-      <p>
-        La cybersécurité et la conformité réglementaire sont aujourd’hui des priorités incontournables pour les
-        entreprises. Notre mission est de protéger vos données, vos systèmes et la confiance de vos clients grâce à des
-        pratiques rigoureuses et des solutions adaptées.
-      </p>
-      <h4>Audits de sécurité</h4>
-      <p>
-        Nous réalisons une évaluation complète de vos infrastructures numériques afin d’identifier les vulnérabilités et
-        de proposer des solutions concrètes.
-      </p>
-      <h4>Mise en place de protocoles robustes</h4>
-      <p>
-        Nous définissons et appliquons des mesures de protection adaptées, incluant le chiffrement des données, la
-        gestion des accès et les sauvegardes sécurisées.
-      </p>
-      <h4>Conformité réglementaire</h4>
-      <p>
-        Nous vous guidons dans l’application des obligations légales, comme la Loi 25 au Québec ou le RGPD en Europe,
-        afin d’assurer la conformité de vos pratiques numériques.
-      </p>
-      <p>
-        Assurer la cybersécurité et la conformité, c’est non seulement protéger vos actifs numériques, mais aussi
-        préserver la réputation et la crédibilité de votre entreprise.
-      </p>
-    </div>
-  ),
   'Analyse de Données & Intelligence d’Affaires': (
     <div className="prose prose-invert prose-xl max-w-none text-gray-300 prose-headings:text-white prose-headings:font-semibold">
       <p>
