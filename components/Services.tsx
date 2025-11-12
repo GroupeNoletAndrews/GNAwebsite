@@ -236,7 +236,7 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
   return (
     <section id="services" className="w-full">
       <div ref={sectionRef} className="relative max-w-[1800px] mx-auto">
-        <div className="hidden md:grid sticky top-0 h-screen w-full md:grid-cols-5 overflow-hidden px-8 gap-x-8">
+        <div className="hidden md:grid sticky top-0 h-screen w-full md:grid-cols-5 overflow-hidden px-8 gap-x-8 break-words white">
           <AnimatedTitle
             lenis={lenis}
             isActive={isActive}
@@ -281,7 +281,9 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
       </div>
       <div className="md:hidden bg-gray-950/50 py-16 px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Nos Piliers d'Expertise</h2>
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight whitespace-normal break-words">
+            Nos Piliers d'Expertise
+          </h2>
           <p className="max-w-2xl mx-auto mt-4 text-xl text-gray-400">
             Des solutions complètes pour transformer votre présence en ligne et accélérer votre croissance.
           </p>

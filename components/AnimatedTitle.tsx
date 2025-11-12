@@ -196,7 +196,7 @@ export const AnimatedTitle: React.FC<AnimatedTitleProps> = ({
     <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center">
       <h2
         ref={titleRef}
-        className="text-6xl sm:text-8xl font-extrabold text-white tracking-tight text-center max-w-5xl whitespace-nowrap transition-opacity duration-200"
+        className="text-6xl sm:text-8xl font-extrabold text-white tracking-tight text-center max-w-5xl xl:whitespace-nowrap whitespace-normal transition-opacity duration-200"
         style={{ willChange: 'transform, font-size, opacity' }}
       >
         {title}
