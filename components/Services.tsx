@@ -251,7 +251,7 @@ const Services: React.FC<ServicesProps> = ({ lenis, isActive }) => {
           </div>
         </div>
       </div>
-      <div className="md:hidden bg-gray-950/50 py-16 px-4">
+      <div className="md:hidden bg-transparent py-16 px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Nos Piliers d'Expertise</h2>
           <p className="max-w-2xl mx-auto mt-4 text-xl text-gray-400">
