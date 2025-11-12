@@ -13,8 +13,38 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Détection du scroll pour mobile - changement immédiat
   useEffect(() => {
-    setIsScrolled(activeIndex > 0);
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      const handleScroll = () => {
+        const scrollContainer = document.querySelector('.overflow-y-auto');
+        if (scrollContainer) {
+          const scrollTop = scrollContainer.scrollTop;
+          setIsScrolled(scrollTop > 0);
+        }
+      };
+
+      const scrollContainer = document.querySelector('.overflow-y-auto');
+      if (scrollContainer) {
+        scrollContainer.addEventListener('scroll', handleScroll);
+        // Vérifier immédiatement l'état du scroll
+        handleScroll();
+      }
+
+      return () => {
+        if (scrollContainer) {
+          scrollContainer.removeEventListener('scroll', handleScroll);
+        }
+      };
+    } else {
+      // Sur desktop, utiliser activeIndex comme avant
+      setIsScrolled(activeIndex > 0);
+    }
+  }, [activeIndex]);
+
+  useEffect(() => {
     // Fermer le menu mobile lors du changement de section
     setIsOpen(false);
   }, [activeIndex]);
@@ -59,12 +89,11 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-gray-950/70 backdrop-blur-sm shadow-md' : 'bg-transparent'
+        isScrolled || isOpen ? 'bg-gray-950/70 backdrop-blur-sm shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-20 sm:h-24 md:h-28">
-          {/* Logo */}
           <div
             className={`flex-shrink-0 transition-opacity duration-300 ${
               isScrolled ? 'opacity-100' : 'md:opacity-0 md:pointer-events-none opacity-100'
@@ -79,7 +108,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
             </CursorHover>
           </div>
 
-          {/* Desktop Navigation */}
           <div
             className={`hidden md:block transition-all duration-300 ${
               isScrolled ? 'relative' : 'absolute left-1/2 -translate-x-1/2'

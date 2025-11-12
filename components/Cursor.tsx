@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-// --- Context ---
 type CursorVariant = 'default' | 'text' | 'button' | 'link';
 
 interface CursorContextProps {
@@ -10,7 +9,6 @@ interface CursorContextProps {
 }
 const CursorContext = createContext<CursorContextProps | null>(null);
 
-// --- Provider Component ---
 interface CursorProviderProps {
   children: React.ReactNode;
 }
@@ -28,7 +26,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
-    // Disable on touch devices or mobile screens
     if (typeof window !== 'undefined') {
       const isMobile =
         'ontouchstart' in window ||
@@ -41,8 +38,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
 
   const onMouseMove = useCallback((e: MouseEvent) => {
     const { clientX, clientY } = e;
-    // We update the React state here to have the highlighter follow smoothly
-    // when not attached to a hovered element.
     setMousePosition({ x: clientX, y: clientY });
 
     if (animationFrameId.current) {
@@ -76,28 +71,15 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
     setHoveredElement: (el: HTMLElement | null, padding: number = 0) => {
       setHoveredElement(el);
 
-      // Copier TOUS les styles pertinents de l'élément
       if (el) {
         const styles = window.getComputedStyle(el);
 
-        // Récupérer les 4 valeurs de border-radius séparément
         const topLeft = styles.borderTopLeftRadius;
         const topRight = styles.borderTopRightRadius;
         const bottomRight = styles.borderBottomRightRadius;
         const bottomLeft = styles.borderBottomLeftRadius;
 
-        // Construire le border-radius complet
         let borderRadius = `${topLeft} ${topRight} ${bottomRight} ${bottomLeft}`;
-
-        // Debug complet
-        console.log('=== DEBUG CURSOR ===');
-        console.log('Element:', el.tagName, el.className);
-        console.log('Border-radius brut:', styles.borderRadius);
-        console.log('Border-radius détaillé:', { topLeft, topRight, bottomRight, bottomLeft });
-        console.log('Largeur:', styles.width);
-        console.log('Hauteur:', styles.height);
-        console.log('Padding:', styles.padding);
-        console.log('Padding ajouté au highlight:', padding);
 
         setHighlightStyle({
           borderRadius: borderRadius,
@@ -119,20 +101,17 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  // Determine cursor visibility and style based on the current state.
   const isFollowerVisible = !hoveredElement;
   const followerScale = cursorVariant === 'text' ? 0 : 1;
   const caretOpacity = cursorVariant === 'text' && !hoveredElement ? 1 : 0;
 
   return (
     <CursorContext.Provider value={contextValue}>
-      {/* 1. The ultra-responsive follower, positioned directly for performance. */}
       <div
         ref={cursorFollowerRef}
         className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200"
         style={{ opacity: isFollowerVisible ? 1 : 0 }}
       >
-        {/* The default dot */}
         <div
           className="bg-white rounded-full mix-blend-difference transition-transform duration-200"
           style={{
@@ -141,7 +120,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
             transform: `scale(${followerScale})`,
           }}
         />
-        {/* The text input caret */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white mix-blend-difference transition-opacity duration-200"
           style={{
@@ -152,7 +130,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
         />
       </div>
 
-      {/* 2. The smooth highlight effect, managed entirely by Framer Motion. */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] bg-white/20 mix-blend-exclusion"
         animate={{
@@ -169,7 +146,6 @@ export const CursorProvider: React.FC<CursorProviderProps> = ({ children }) => {
   );
 };
 
-// --- Hover Component Wrapper ---
 interface CursorHoverProps extends Omit<React.AllHTMLAttributes<HTMLElement>, 'as'> {
   children: React.ReactNode;
   cursorStyle?: 'block' | 'text' | 'button' | 'link';
@@ -197,7 +173,6 @@ export const CursorHover: React.FC<CursorHoverProps> = ({
       setCursorVariant('text');
     } else if (cursorStyle === 'button' && ref.current) {
       setCursorVariant('button');
-      // Pour les boutons, détecter l'enfant direct (le vrai button/element)
       const targetElement = (ref.current.firstElementChild as HTMLElement) || ref.current;
       setHoveredElement(targetElement, padding);
     } else if (cursorStyle === 'link' && ref.current) {

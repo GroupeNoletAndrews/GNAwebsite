@@ -18,7 +18,6 @@ export default function App() {
   useEffect(() => {
     if (!scrollRef.current) return;
 
-    // Désactiver Lenis sur mobile pour utiliser le scroll natif
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
       return;
@@ -47,7 +46,6 @@ export default function App() {
 
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Intersection Observer to detect active section on scroll
   useEffect(() => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
@@ -64,7 +62,7 @@ export default function App() {
         });
       },
       {
-        root: scrollContainer, // Watch for intersections within our scroll container
+        root: scrollContainer,
         rootMargin: '-50% 0px -50% 0px',
         threshold: 0,
       }
@@ -86,16 +84,13 @@ export default function App() {
     if (!target) return;
 
     if (lenis) {
-      // Utiliser Lenis sur desktop pour un scroll fluide
       lenis.scrollTo(target, { offset: 0, duration: 2 });
     } else {
-      // Fallback pour mobile ou si Lenis n'est pas initialisé
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
   const handleContactClick = () => {
-    // Naviguer vers la section contact (index 5)
     handleNavigate(5);
   };
 
@@ -133,7 +128,7 @@ export default function App() {
       >
         <Header onNavigate={handleNavigate} activeIndex={activeIndex} />
 
-        <main>
+        <main className="mt-[100px]">
           {sectionComponents.map(({ id, Component, props }, index) => {
             const needsLenis = ['services', 'team', 'pourquoi-nous-choisir'].includes(id);
             const additionalProps = needsLenis ? { lenis, scrollRef } : {};
@@ -144,7 +139,7 @@ export default function App() {
                   sectionRefs.current[index] = el;
                 }}
                 id={id}
-                className={index === 0 ? 'h-screen' : ''}
+                className={index === 0 ? '' : ''}
               >
                 <Component isActive={activeIndex === index} {...props} {...additionalProps} />
               </div>

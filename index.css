@@ -17,6 +17,13 @@ body {
   position: relative;
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  cursor: none;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
 }
 
 /* ============================================

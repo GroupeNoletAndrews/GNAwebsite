@@ -7,6 +7,7 @@
     <title>Groupe Nolet & Andrews</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
@@ -21,7 +22,6 @@
         height: 100%;
         width: 100%;
       }
-      /* Desktop: custom overflow control */
       @media (min-width: 768px) {
         html,
         body,
@@ -29,7 +29,6 @@
           overflow: hidden;
         }
       }
-      /* Mobile: allow native scroll */
       @media (max-width: 767px) {
         html,
         body,
@@ -41,6 +40,11 @@
         font-family: 'Manrope', sans-serif;
         background-color: #000;
         -webkit-overflow-scrolling: touch;
+      }
+      @media (min-width: 1024px) and (pointer: fine) {
+        * {
+          cursor: none !important;
+        }
       }
     </style>
     <script type="importmap">

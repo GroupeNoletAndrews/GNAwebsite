@@ -29,20 +29,19 @@ const About: React.FC<AboutProps> = ({ isActive }) => {
   const isMobile = useIsMobile();
   const itemVariants = useItemVariants();
 
-  // Variants simplifiés sur mobile (pas de scale)
   const variants = isMobile
     ? {
-        visible: { opacity: 1, transition: { duration: 0.4 } },
-        hidden: { opacity: 0, transition: { duration: 0.3 } },
+        visible: { opacity: 1, transition: { duration: 1.5 } },
+        hidden: { opacity: 0, transition: { duration: 1 } },
       }
     : {
-        visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: 0.3, when: 'beforeChildren' } },
-        hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
+        visible: { opacity: 1, scale: 1, transition: { duration: 2, delay: 0, when: 'beforeChildren' } },
+        hidden: { opacity: 0, scale: 0.95, transition: { duration: 1.2 } },
       };
 
   const contentJSX = (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <AnimatedContainer className="text-center" stagger={0.1}>
+      <AnimatedContainer className="text-center" stagger={0.4}>
         <motion.h2
           variants={itemVariants}
           className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight"
@@ -60,7 +59,7 @@ const About: React.FC<AboutProps> = ({ isActive }) => {
       </AnimatedContainer>
       <AnimatedContainer
         className="mt-12 sm:mt-16 grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        stagger={0.15}
+        stagger={0.5}
       >
         <FeatureCard
           icon={
