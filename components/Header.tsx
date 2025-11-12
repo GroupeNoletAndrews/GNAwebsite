@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NAV_LINKS } from '../constants';
 import { CursorHover } from './Cursor';
 
@@ -12,6 +12,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [headerHeight, setHeaderHeight] = useState<number>(0);
 
   useEffect(() => {
     setIsScrolled(activeIndex > 0);
@@ -33,6 +35,20 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
     return () => {
       clearTimeout(timer);
     };
+  }, []);
+
+  // Measure header height so the mobile menu can be positioned exactly beneath it
+  useEffect(() => {
+    const measure = () => {
+      if (headerRef.current) {
+        const h = Math.ceil(headerRef.current.getBoundingClientRect().height);
+        setHeaderHeight(h);
+      }
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
   }, []);
 
   // Bloquer le scroll quand le menu mobile est ouvert
@@ -58,21 +74,38 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
 
   return (
     <header
+      ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-gray-950/70 backdrop-blur-sm shadow-md' : 'bg-transparent'
+        isScrolled || isOpen ? 'bg-gray-950/70 backdrop-blur-sm shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-20 sm:h-24 md:h-28">
-          {/* Logo */}
+          {/* Logo: desktop and mobile variants */}
+          {/* Desktop logo: visible based on scroll (keeps existing behavior) */}
           <div
-            className={`flex-shrink-0 transition-opacity duration-300 ${
-              isScrolled ? 'opacity-100' : 'md:opacity-0 md:pointer-events-none opacity-100'
+            className={`hidden md:flex flex-shrink-0 transition-opacity duration-300 ${
+              isScrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
             <CursorHover as="button" onClick={() => onNavigate(0)} className="block">
               <img
                 className="h-12 sm:h-16 md:h-20 w-auto"
+                src="https://plexview.ca/assets/Nolet__andrews_blanc-CHc9YYqz.png"
+                alt="Groupe Nolet & Andrews"
+              />
+            </CursorHover>
+          </div>
+
+          {/* Mobile logo: visible when menu is open or when header is in scrolled state */}
+          <div
+            className={`flex md:hidden flex-shrink-0 transition-opacity duration-200 ${
+              isOpen || isScrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <CursorHover as="button" onClick={() => onNavigate(0)} className="block">
+              <img
+                className="h-10 w-auto"
                 src="https://plexview.ca/assets/Nolet__andrews_blanc-CHc9YYqz.png"
                 alt="Groupe Nolet & Andrews"
               />
@@ -159,8 +192,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, activeIndex }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden"
+            className="md:hidden fixed inset-x-0 z-40"
             id="mobile-menu"
+            style={{ top: headerHeight ? `${headerHeight}px` : undefined }}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
