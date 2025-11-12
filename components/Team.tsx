@@ -17,6 +17,12 @@ const Team: React.FC<TeamProps> = ({ isActive, lenis }) => {
   // Premium mobile layout
   const mobileLayout = (
     <div className="w-full py-16 px-4 bg-gradient-to-b from-transparent via-gray-950/30 to-transparent">
+      <div className="text-center mb-6">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Notre Équipe</h2>
+        <p className="max-w-xl mx-auto mt-3 text-lg text-gray-400">
+          Les experts passionnés qui propulsent votre succès.
+        </p>
+      </div>
       <div className="max-w-2xl mx-auto space-y-6">
         {TEAM_MEMBERS.map((member, index) => (
           <div
